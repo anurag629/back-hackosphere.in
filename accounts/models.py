@@ -4,10 +4,12 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, email, name, password=None):
+    def create_user(self, email, name=None, password=None):
         if not email:
             raise ValueError('User must have an email address')
 
+        if name is None:
+            name = "Guest"
         email = self.normalize_email(email)
         user = self.model(email=email, name=name)
 
