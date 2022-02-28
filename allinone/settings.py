@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,11 +29,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'djoser',
     'accounts',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +67,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'allinone.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -70,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'allinonebuissness',
-        'USER': 'anurag',
-        'PASSWORD': '@nuraG1!',
+        'USER': 'root',
+        'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
@@ -127,13 +135,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICTON_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
 }
 
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT')
+    'AUTH_HEADER_TYPES': ('JWT'),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 DJOSER = {
